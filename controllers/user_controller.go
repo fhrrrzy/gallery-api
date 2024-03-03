@@ -2,10 +2,8 @@
 package controllers
 
 import (
-    "net/http"
-
     "github.com/gin-gonic/gin"
-    "github.com/my-gin-api/models"
+    "github.com/fhrrrzy/gallery-api/models"
 )
 
 // RegisterUser handles user registration

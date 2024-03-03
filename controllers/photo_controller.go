@@ -2,25 +2,26 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
+    "github.com/gin-gonic/gin"
+    "github.com/fhrrrzy/gallery-api/models"
 )
 
 // CreatePhoto handles creating a new photo
 func CreatePhoto(c *gin.Context) {
-	// Implement create photo logic
+    // Implement create photo logic
 }
 
 // GetPhotos handles getting all photos
 func GetPhotos(c *gin.Context) {
-	// Implement get photos logic
+    // Implement get photos logic
 }
 
 // UpdatePhoto handles updating photo information
 func UpdatePhoto(c *gin.Context) {
-	// Implement update photo logic
+    // Implement update photo logic
 }
 
 // DeletePhoto handles deleting a photo
 func DeletePhoto(c *gin.Context) {
-	// Implement delete photo logic
+    // Implement delete photo logic
 }
