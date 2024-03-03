@@ -3,7 +3,6 @@ package middlewares
 
 import (
     "github.com/gin-gonic/gin"
-    "github.com/fhrrrzy/gallery-api/models"
 )
 
 // AuthMiddleware validates JWT token and sets user information in the context
