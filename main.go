@@ -2,32 +2,29 @@
 package main
 
 import (
-    "fmt"
-    "github.com/gin-gonic/gin"
-    // "gorm.io/driver/sqlite"
-    // "gorm.io/gorm"
-    // "github.com/fhrrrzy/gallery-api/middlewares"
-    "github.com/fhrrrzy/gallery-api/routes"
-    // "github.com/fhrrrzy/gallery-api/models"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/fhrrrzy/gallery-api/database"
+	"github.com/fhrrrzy/gallery-api/repositories"
+	"github.com/fhrrrzy/gallery-api/routes"
 )
 
 func main() {
-    // Initialize Gin
-    router := gin.Default()
+	// Initialize Gin
+	router := gin.Default()
 
-    // Database setup
-    // db, err := gorm.Open(sqlite.Open("gallery-api.db"), &gorm.Config{})
-    // if err != nil {
-    //     panic("Failed to connect to the database")
-    // }
-    // // AutoMigrate will create the necessary tables based on the provided models
-    // db.AutoMigrate(&models.User{}, &models.Photo{})
+	// Database setup
+	database.InitDB()
+	database.MigrateDB()
 
-    // Setup routes
-    routes.SetupRoutes(router)
+	// Initialize repositories
+	repositories.Init(database.DB)
 
-    // Start the server
-    port := 8080
-    fmt.Printf("Server running on :%d\n", port)
-    router.Run(fmt.Sprintf(":%d", port))
+	// Setup routes
+	routes.SetupRoutes(router)
+
+	// Start the server
+	port := 8080
+	fmt.Printf("Server running on :%d\n", port)
+	router.Run(fmt.Sprintf(":%d", port))
 }

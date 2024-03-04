@@ -1,5 +1,7 @@
-// controllers/requests.go
-package controllers
+// app/user_requests.go
+package app
+
+import "github.com/asaskevich/govalidator"
 
 // CreateUserRequest represents the request structure for user registration
 type CreateUserRequest struct {
@@ -21,17 +23,20 @@ type UpdateUserRequest struct {
 	Password string `json:"password" binding:"omitempty,min=6"`
 }
 
-// CreatePhotoRequest represents the request structure for creating a new photo
-type CreatePhotoRequest struct {
-	Title    string `json:"title" binding:"required"`
-	Caption  string `json:"caption"`
-	PhotoURL string `json:"photoUrl"`
-	UserID   uint   `json:"userId" binding:"required"`
+// ValidateCreateUserRequest validates the CreateUserRequest using govalidator
+func ValidateCreateUserRequest(req CreateUserRequest) error {
+	_, err := govalidator.ValidateStruct(req)
+	return err
 }
 
-// UpdatePhotoRequest represents the request structure for updating photo information
-type UpdatePhotoRequest struct {
-	Title    string `json:"title"`
-	Caption  string `json:"caption"`
-	PhotoURL string `json:"photoUrl"`
+// ValidateLoginUserRequest validates the LoginUserRequest using govalidator
+func ValidateLoginUserRequest(req LoginUserRequest) error {
+	_, err := govalidator.ValidateStruct(req)
+	return err
+}
+
+// ValidateUpdateUserRequest validates the UpdateUserRequest using govalidator
+func ValidateUpdateUserRequest(req UpdateUserRequest) error {
+	_, err := govalidator.ValidateStruct(req)
+	return err
 }

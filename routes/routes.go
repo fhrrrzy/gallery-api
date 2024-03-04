@@ -10,23 +10,26 @@ import (
 // SetupRoutes configures API routes
 func SetupRoutes(router *gin.Engine) {
 	// Public routes (no authentication required)
-	publicGroup := router.Group("/api")
+	publicGroup := router.Group("/")
 	{
 		publicGroup.POST("/users/register", controllers.RegisterUser)
 		publicGroup.POST("/users/login", controllers.LoginUser)
 	}
 
-	// Authenticated routes (require authentication)
-	authGroup := router.Group("/api").Use(middlewares.AuthMiddleware())
+	// Authenticated routes for Users
+	userAuthGroup := router.Group("/users").Use(middlewares.AuthMiddleware())
 	{
-		// User Endpoints
-		authGroup.PUT("/users/:userId", controllers.UpdateUser)
-		authGroup.DELETE("/users/:userId", controllers.DeleteUser)
+		userAuthGroup.PUT("/:userId", controllers.UpdateUser)
+		userAuthGroup.DELETE("/:userId", controllers.DeleteUser)
+	}
 
-		// Photos Endpoints
-		authGroup.POST("/photos", controllers.CreatePhoto)
-		authGroup.GET("/photos", controllers.GetPhotos)
-		authGroup.PUT("/photos/:photoId", controllers.UpdatePhoto)
-		authGroup.DELETE("/photos/:photoId", controllers.DeletePhoto)
+	// Authenticated routes for Photos
+	photoAuthGroup := router.Group("/photos").Use(middlewares.AuthMiddleware())
+	{
+		photoAuthGroup.POST("/", controllers.CreatePhoto)
+		photoAuthGroup.GET("/", controllers.GetPhotos)
+		photoAuthGroup.PUT("/:photoId", controllers.UpdatePhoto)
+		photoAuthGroup.DELETE("/:photoId", controllers.DeletePhoto)
 	}
 }
+	
