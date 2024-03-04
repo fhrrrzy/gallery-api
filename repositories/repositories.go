@@ -3,12 +3,13 @@ package repositories
 
 import "gorm.io/gorm"
 
+var (
+	UserRepository *UserRepository
+	PhotoRepository *PhotoRepository
+)
+
 // Init initializes repositories with the provided database instance
 func Init(db *gorm.DB) {
-	UserRepository := UserRepository{DB: db}
-	PhotoRepository := PhotoRepository{DB: db}
-
-	// Assign the initialized repositories to the global variables
-	UserRepository = UserRepository
-	PhotoRepository = PhotoRepository
+	UserRepository = NewUserRepository(db)
+	PhotoRepository = NewPhotoRepository(db)
 }

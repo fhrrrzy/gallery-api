@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/fhrrrzy/gallery-api/database"
-	"github.com/fhrrrzy/gallery-api/repositories"
+	// "github.com/fhrrrzy/gallery-api/repositories"
 	"github.com/fhrrrzy/gallery-api/routes"
 )
 
@@ -18,7 +18,7 @@ func main() {
 	database.MigrateDB()
 
 	// Initialize repositories
-	repositories.Init(database.DB)
+	// repositories.Init(database.DB)
 
 	// Setup routes
 	routes.SetupRoutes(router)

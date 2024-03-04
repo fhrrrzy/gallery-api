@@ -7,9 +7,12 @@ import (
 	"github.com/fhrrrzy/gallery-api/app"
 )
 
-// UserRepository is a repository for user-related operations
 type UserRepository struct {
 	DB *gorm.DB
+}
+
+func NewUserRepository(db *gorm.DB) *UserRepository {
+	return &UserRepository{DB: db}
 }
 
 // CreateUser creates a new user in the database

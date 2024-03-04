@@ -6,10 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-// PhotoRepository handles photo-related database operations
+
 type PhotoRepository struct {
 	DB *gorm.DB
 }
+
+func NewPhotoRepository(db *gorm.DB) *PhotoRepository {
+	return &PhotoRepository{DB: db}
+}
+
 
 // CreatePhoto creates a new photo in the database
 func (r *PhotoRepository) CreatePhoto(photo *models.Photo) error {

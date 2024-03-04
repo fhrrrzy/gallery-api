@@ -8,12 +8,13 @@ import (
 
 var secretKey = []byte("tentusajasecretkey") // Change this to a secure secret key
 
-// GenerateJWTToken generates a JWT token for the given email and username
-func GenerateJWTToken(email, username string) (string, error) {
+// GenerateJWTToken generates a JWT token for the given email, username, and userID
+func GenerateJWTToken(email, username, userID string) (string, error) {
 	// Set up the token claims
 	claims := jwt.MapClaims{
 		"email":    email,
 		"username": username,
+		"userID":   userID,
 		"exp":      time.Now().Add(time.Hour * 24).Unix(), // Token expiration time (e.g., 24 hours)
 	}
 
@@ -25,4 +26,21 @@ func GenerateJWTToken(email, username string) (string, error) {
 	}
 
 	return signedToken, nil
+}
+
+// DecodeJWTToken decodes a JWT token and returns the claims
+func DecodeJWTToken(tokenString string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return secretKey, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, jwt.ErrSignatureInvalid
 }
