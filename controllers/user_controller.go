@@ -125,6 +125,19 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	// Extract the user ID from the JWT token in the Authorization header
+	userIDFromToken, err := helpers.ExtractUserIDFromToken(c.Request)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	// Check if the user is authorized to perform the update
+	if userID != userIDFromToken {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+		return
+	}
+
 	var updateRequest app.UpdateUserRequest
 	if err := c.ShouldBindJSON(&updateRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -139,10 +152,29 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	// Check if the email is being updated
+	if existingUser.Email != updateRequest.Email {
+		// Email is being updated, check if the new email is unique
+		var userWithEmailExists models.User
+		err = database.DB.Where("email = ?", updateRequest.Email).First(&userWithEmailExists).Error
+		if err == nil {
+			// Email already registered
+			c.JSON(http.StatusConflict, gin.H{"error": "Email already registered"})
+			return
+		}
+	}
+
 	// Update user information
 	existingUser.Username = updateRequest.Username
 	existingUser.Email = updateRequest.Email
-	existingUser.Password = updateRequest.Password
+
+	// Hash the new password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(updateRequest.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash the password"})
+		return
+	}
+	existingUser.Password = string(hashedPassword)
 
 	// Save the updated user to the database
 	if err := database.DB.Save(&existingUser).Error; err != nil {
@@ -154,6 +186,7 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User updated successfully", "userId": userID})
 }
 
+
 // DeleteUser handles deleting user
 func DeleteUser(c *gin.Context) {
 	// Extract user ID from path parameter
@@ -161,6 +194,19 @@ func DeleteUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(userIDStr, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	// Extract the user ID from the JWT token in the Authorization header
+	userIDFromToken, err := helpers.ExtractUserIDFromToken(c.Request)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	// Check if the user is authorized to perform the deletion
+	if userID != userIDFromToken {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
 		return
 	}
 

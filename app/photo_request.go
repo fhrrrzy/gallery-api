@@ -8,7 +8,6 @@ type CreatePhotoRequest struct {
 	Title    string `json:"title" binding:"required"`
 	Caption  string `json:"caption"`
 	PhotoURL string `json:"photoUrl"`
-	UserID   uint   `json:"userId" binding:"required"`
 }
 
 // UpdatePhotoRequest represents the request structure for updating photo information
